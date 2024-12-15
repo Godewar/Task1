@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editable React Table</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: #fff;
+    }
+    .edit-input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2c81ba;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function EditableTable() {
+      const initialData = [
+        { id: 1, name: "Ram", age: 30, city: "Nagpur" },
+        { id: 2, name: "Shayam", age: 25, city: "Mumbai" },
+        { id: 3, name: "Mohan", age: 35, city: "Delhi" },
+      ];
+
+      const [data, setData] = useState(initialData);
+
+      const handleInputChange = (id, field, value) => {
+        const updatedData = data.map((row) =>
+          row.id === id ? { ...row, [field]: value } : row
+        );
+        setData(updatedData);
+      };
+
+      const handleSubmit = () => {
+        console.log("Data ready to post:", data);
+        alert("Data is ready to post to the API. Check the console.");
+      };
+
+      return (
+        <div>
+          <h1>Editable Table</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>City</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row) => (
+                <tr key={row.id}>
+                  <td>{row.id}</td>
+                  <td>
+                    <input
+                      className="edit-input"
+                      type="text"
+                      value={row.name}
+                      onChange={(e) =>
+                        handleInputChange(row.id, "name", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="edit-input"
+                      type="number"
+                      value={row.age}
+                      onChange={(e) =>
+                        handleInputChange(row.id, "age", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="edit-input"
+                      type="text"
+                      value={row.city}
+                      onChange={(e) =>
+                        handleInputChange(row.id, "city", e.target.value)
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleSubmit}>Submit</button>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<EditableTable />);
+  </script>
+</body>
+</html>
